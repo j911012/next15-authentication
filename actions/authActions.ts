@@ -1,6 +1,7 @@
 "use server";
 
 import { SignupFormState } from "@/types/auth";
+import { createUser } from "@/lib/user";
 
 export async function signup(
   prevState: SignupFormState,
@@ -23,7 +24,7 @@ export async function signup(
     return { errors };
   }
 
-  // DB保存処理
+  createUser(email, password);
 
   return {}; // エラーなし
 }
