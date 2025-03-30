@@ -9,7 +9,7 @@ export async function signup(
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const errors: SignupFormState["errors"] = {};
+  const errors: { email?: string; password?: string } = {};
 
   if (!email.includes("@")) {
     errors.email = "Invalid email address";

@@ -10,7 +10,7 @@ import { SignupFormState } from "@/types/auth";
 export default function AuthForm() {
   const [formState, formAction] = useActionState<SignupFormState, FormData>(
     signup,
-    {}
+    undefined
   );
 
   return (
@@ -26,10 +26,12 @@ export default function AuthForm() {
         <label htmlFor="password">Password</label>
         <input type="password" name="password" id="password" />
       </p>
-      {formState.errors && (
+      {formState?.errors && (
         <ul id="form-errors">
-          {Object.keys(formState.errors ?? {}).map((key) => (
-            <li key={key}>{formState.errors?.[key]}</li>
+          {Object.keys(formState.errors).map((key) => (
+            <li key={key}>
+              {formState.errors?.[key as keyof typeof formState.errors]}
+            </li>
           ))}
         </ul>
       )}
