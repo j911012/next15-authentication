@@ -3,6 +3,7 @@
 import { SignupFormState } from "@/types/auth";
 import { createUser } from "@/lib/user";
 import { hashUserPassword } from "@/lib/hash";
+import { redirect } from "next/navigation";
 
 export async function signup(
   prevState: SignupFormState,
@@ -26,7 +27,20 @@ export async function signup(
   }
 
   const hashedPassword = hashUserPassword(password);
-  createUser(email, hashedPassword);
 
-  return {}; // エラーなし
+  try {
+    // ユーザーを作成
+    createUser(email, hashedPassword);
+  } catch (error: any) {
+    if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+      return {
+        errors: {
+          email: "Email already exists",
+        },
+      };
+    }
+    throw error; // その他のエラーはそのままスロー
+  }
+
+  redirect("/training");
 }
