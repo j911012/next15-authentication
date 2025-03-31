@@ -2,6 +2,7 @@
 
 import { SignupFormState } from "@/types/auth";
 import { createUser } from "@/lib/user";
+import { hashUserPassword } from "@/lib/hash";
 
 export async function signup(
   prevState: SignupFormState,
@@ -24,7 +25,8 @@ export async function signup(
     return { errors };
   }
 
-  createUser(email, password);
+  const hashedPassword = hashUserPassword(password);
+  createUser(email, hashedPassword);
 
   return {}; // エラーなし
 }
