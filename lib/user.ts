@@ -1,9 +1,15 @@
 import db from "./db";
+import crypto from "node:crypto";
 
 export function createUser(email: string, password: string) {
-  const result = db
-    .prepare("INSERT INTO users (email, password) VALUES (?, ?)")
-    .run(email, password);
+  // Lucia の User["id"] はデフォルトで string 型 を期待しているため、
+  const id = crypto.randomUUID(); // ここでstring型のIDを生成
 
-  return result.lastInsertRowid as number; // 追加されたユーザーのIDを返す
+  db.prepare("INSERT INTO users (id, email, password) VALUES (?, ?, ?)").run(
+    id,
+    email,
+    password
+  );
+
+  return id; // 追加されたユーザーのIDを返す
 }
