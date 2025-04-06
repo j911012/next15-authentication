@@ -1,5 +1,14 @@
 import AuthForm from "@/components/AuthForm";
 
-export default function Home() {
-  return <AuthForm />;
+type AuthFormMode = "login" | "signup";
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const modeParam = (await searchParams).mode;
+  const formMode: AuthFormMode = modeParam === "signup" ? "signup" : "login";
+
+  return <AuthForm mode={formMode} />;
 }
