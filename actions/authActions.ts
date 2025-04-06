@@ -1,8 +1,8 @@
 "use server";
 
-import { SignupFormState } from "@/types/auth";
-import { createUser } from "@/lib/user";
-import { hashUserPassword } from "@/lib/hash";
+import { LoginFormState, SignupFormState } from "@/types/auth";
+import { createUser, getUserByEmail } from "@/lib/user";
+import { hashUserPassword, verifyPassword } from "@/lib/hash";
 import { redirect } from "next/navigation";
 import { createAuthSession } from "@/lib/auth";
 
@@ -43,4 +43,37 @@ export async function signup(
     }
     throw error; // その他のエラーはそのままスロー
   }
+}
+
+export async function login(
+  prevState: LoginFormState,
+  formData: FormData
+): Promise<LoginFormState> {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  // ユーザーが存在するか確認
+  const existingUser = getUserByEmail(email);
+
+  if (!existingUser) {
+    return {
+      errors: {
+        email: "Could not authenticate user, please check your credentials",
+      },
+    };
+  }
+
+  // パスワードを検証
+  const isValidPassword = verifyPassword(existingUser.password, password);
+
+  if (!isValidPassword) {
+    return {
+      errors: {
+        password: "Could not authenticate user, please check your credentials",
+      },
+    };
+  }
+
+  await createAuthSession(existingUser.id);
+  redirect("/training");
 }
