@@ -4,14 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useActionState } from "react";
 import AuthIcon from "@/public/images/auth-icon.jpg";
-import { signup } from "@/actions/authActions";
-import { SignupFormState } from "@/types/auth";
+import { auth } from "@/actions/authActions";
+import { FormStateType } from "@/types/auth";
 
 export type AuthFormProps = "login" | "signup";
 
 export default function AuthForm({ mode }: { mode: AuthFormProps }) {
-  const [formState, formAction] = useActionState<SignupFormState, FormData>(
-    signup,
+  const [formState, formAction] = useActionState<FormStateType, FormData>(
+    auth.bind(null, mode),
     undefined
   );
 

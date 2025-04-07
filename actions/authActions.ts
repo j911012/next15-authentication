@@ -1,15 +1,15 @@
 "use server";
 
-import { LoginFormState, SignupFormState } from "@/types/auth";
+import { FormStateType } from "@/types/auth";
 import { createUser, getUserByEmail } from "@/lib/user";
 import { hashUserPassword, verifyPassword } from "@/lib/hash";
 import { redirect } from "next/navigation";
 import { createAuthSession } from "@/lib/auth";
 
 export async function signup(
-  prevState: SignupFormState,
+  prevState: FormStateType,
   formData: FormData
-): Promise<SignupFormState> {
+): Promise<FormStateType> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -46,9 +46,9 @@ export async function signup(
 }
 
 export async function login(
-  prevState: LoginFormState,
+  prevState: FormStateType,
   formData: FormData
-): Promise<LoginFormState> {
+): Promise<FormStateType> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -76,4 +76,16 @@ export async function login(
 
   await createAuthSession(existingUser.id);
   redirect("/training");
+}
+
+export async function auth(
+  mode: "login" | "signup",
+  prevState: FormStateType,
+  formData: FormData
+): Promise<FormStateType> {
+  if (mode === "login") {
+    return login(prevState, formData);
+  } else {
+    return signup(prevState, formData);
+  }
 }

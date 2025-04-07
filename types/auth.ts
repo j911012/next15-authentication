@@ -1,13 +1,4 @@
-export type SignupFormState =
-  | {
-      errors?: {
-        email?: string;
-        password?: string;
-      };
-    }
-  | undefined;
-
-export type LoginFormState =
+export type FormStateType =
   | {
       errors?: {
         email?: string;
