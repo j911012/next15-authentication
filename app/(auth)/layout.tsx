@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import "../globals.css";
+import { logout } from "@/actions/authActions";
 
 export const metadata: Metadata = {
   title: "Next Auth",
@@ -15,7 +16,7 @@ export default function AuthLayoutRoot({
     <>
       <header id="auth-header">
         <p>Welcome back!</p>
-        <form>
+        <form action={logout}>
           <button>Logout</button>
         </form>
       </header>

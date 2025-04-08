@@ -72,3 +72,13 @@ export async function verifyAuth(): Promise<AuthResult> {
 
   return result;
 }
+
+export async function destroySession() {
+  const { session } = await verifyAuth(); // 現在のセッションを確認
+
+  if (!session) {
+    throw new Error("No active session found"); // セッションがなければログアウト不可
+  }
+
+  await lucia.invalidateSession(session.id); // セッション削除（DBからも削除）
+}
